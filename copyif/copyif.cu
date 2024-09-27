@@ -14,7 +14,7 @@
 //bool CHECK(cudaError_t code, )
 __device__ int atomicAggInc(int *ctr) {
   unsigned int active = __activemask();
-  int leader = __ffs(active) - 1; // 视频所示代码这里有误，leader应该表示warp里面第一个src[threadIdx.x]>0的threadIdx.x
+  int leader = __ffs(active) - 1;
   int change = __popc(active);//warp mask中为1的数量
   int lane_mask_lt;
   asm("mov.u32 %0, %%lanemask_lt;" : "=r"(lane_mask_lt));

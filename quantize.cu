@@ -113,7 +113,6 @@ void QuantizationPerChannelSymmetricCPU(const T* in_ptr, const T* scale, const i
     out_ptr[j] = out;
   }
 }
-// 以上是CPU上的quantize函数，接下来用CUDA重写
 // GPU device function
 __device__ float gpunearbyint(float a) {
   return std::nearbyint(a);
@@ -144,7 +143,6 @@ __device__ float gpunearbyint(float a) {
 
 //  return old;
 //}
-// 封装好的atmoicMax不支持fp32类型，所以我们这里需要针对fp32类型重载atomicMax
 // fp32 type atomicMax from stackoverflow and nv developer forum: https://forums.developer.nvidia.com/t/cuda-atomicmax-for-float/194207
 inline __device__ float atomicMax(float *address, float val) {
   int* address_as_i = (int*)address;
@@ -262,10 +260,6 @@ __global__ void ReduceMaxMinPerChannel(const T* input_ptr, const int nums,
   }
 }
 
-// Note: performance will be low if use cpu function
-// why? min max ptr locate GPU memory ,not CPU memory.Because CPU funtion requests CPU memory data, so need
-// copy max min ptr from GPU memory to CPU memory, which will incur some overhead!
-// in addition, next kernel will run on GPU, at that time, scale and zeropoint will be copied from host to device,which will incur overhead, too
 template<typename T>
 __global__ void GetScaleAndZPSymmetric(const T* max_ptr, const T* min_ptr,
                                            const int nums, const double quantization_bit,

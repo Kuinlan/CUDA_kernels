@@ -20,7 +20,7 @@ __device__ float TanhApprox(float x) {
   return tanhf(x); // CUDA内置的math API
 }
 
-// gelu公式：x / 2 * (1 + tan(0.7978845608028654 * (x + 0.044714998453855515 * x^3))), 可上网自查
+// gelu: x / 2 * (1 + tan(0.7978845608028654 * (x + 0.044714998453855515 * x^3))), 可上网自查
 template<typename T>
 struct GeluFunctor {
   static constexpr T alpha = static_cast<T>(0.7978845608028654);
@@ -38,7 +38,6 @@ struct GeluFunctor {
 
 template<>
 struct GeluFunctor<half> {
-  // 偷了个懒，直接把L26和L27拿过来用
   static constexpr float alpha = GeluFunctor<float>::alpha;
   static constexpr float beta = GeluFunctor<float>::beta;
   GeluFunctor<float> float_functor;
@@ -55,7 +54,6 @@ struct GeluFunctor<half> {
     // so you should better use half intrinsic when you have ampere GPU, you can enable 44-47 line
     return static_cast<half>(float_functor(static_cast<float>(x)));
   }
-  // Note: when you have ampere GPU, you can enable the "apply2" method to get performance improvement by half2 intrinsic.
   //__device__ void apply2(half* y, const half* x) const {
     //const half2 x2 = *(reinterpret_cast<const half2*>(x)); // L89行已经求出了offset，这里直接把指针转换为向量类型并解引用即可得到向量数据
     //const float2 tanh_in = __half22float2(
