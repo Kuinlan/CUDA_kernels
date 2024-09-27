@@ -1,0 +1,8 @@
+//
+// Created by morgen on 2024/9/3.
+//
+
+#ifndef CUDATUTORIAL_COPYIF_CUH
+#define CUDATUTORIAL_COPYIF_CUH
+
+#endif //CUDATUTORIAL_COPYIF_CUH

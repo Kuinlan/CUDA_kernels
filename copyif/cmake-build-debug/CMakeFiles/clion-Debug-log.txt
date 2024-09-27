@@ -1,0 +1,34 @@
+/home/morgen/ProgramFiles/clion-2024.1.4/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/morgen/ProgramFiles/clion-2024.1.4/bin/ninja/linux/x64/ninja -G Ninja -S /home/morgen/projects/CUDA/CUDATutorial/Mycode/copyif -B /home/morgen/projects/CUDA/CUDATutorial/Mycode/copyif/cmake-build-debug
+-- The CUDA compiler identification is NVIDIA 12.4.131
+-- The CXX compiler identification is GNU 11.4.0
+-- Detecting CUDA compiler ABI info
+-- Detecting CUDA compiler ABI info - done
+-- Check for working CUDA compiler: /usr/local/cuda-12.4/bin/nvcc - skipped
+-- Detecting CUDA compile features
+-- Detecting CUDA compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+CMake Warning (dev) at CMakeLists.txt:5 (find_package):
+  Policy CMP0146 is not set: The FindCUDA module is removed.  Run "cmake
+  --help-policy CMP0146" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found CUDA: /usr/local/cuda-12.4 (found suitable version "12.4", minimum required is "12.4") 
+-- Configuring done (1.1s)
+CMake Error at CMakeLists.txt:9 (add_executable):
+  No SOURCES given to target: copy_if
+
+
+CMake Generate step failed.  Build files cannot be regenerated correctly.
