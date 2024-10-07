@@ -1,7 +1,7 @@
 // sgemm one thread for muti data point without prefetch
 // blocks of A is stored in smem transposed
 // thread size of a thread is divided into sub block (8 * 8) -> 4 * (4*4) to avoid bank conflict
-// it would gain some performance conpared to v2
+// it would gain some performance compared to v2
 
 #include <stdio.h>
 #include <stdlib.h>

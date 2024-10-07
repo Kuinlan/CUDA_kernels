@@ -1,4 +1,26 @@
-// optimize sgemm
+// Add prefetch
+
+/*
+ *  总体有两层循环
+    第一层大循环是 k-split，循环次数是 K / BLOCK_SIZE_K
+    第二层小循环，循环次数是 BLOCK_SIZE_K
+
+      1. 将 k-split 第一块所需数据从全局内存读取到共享内存 As[0], Bs[0]，先读取到寄存器 ldg_a_reg 中，再读取到共享内存
+      2. 将第一次小循环所需的数据从共享内存 As[0], Bs[0] 读取到frag_a[0], frag_b[0]中
+      3. 设置共享内存在双缓冲中的模式（读取/写入），write_stage_idx = 1
+      4. 开始 k-split 大循环
+	    1. ldg_a_reg 从全局内存读取 **下一个 split** 的数据，首先会判断是否已经读取完最后一个 split，若是，则不读取
+	    2. 设置 load_stage_idx，`int load_stage_idx = write_stage_idx ^ 1`，若 0 号共享内存是写模式，那么1号共享内存就是读模式
+	    3. 开始小循环
+		  1. 根据小循环次数，交替使用 frag_a[0] 与 frag_b[1]，对 load_stage_idx 指定的共享内存进行读取，对于 b 同理；这里首先会
+		     写入 frag_a[1] 和 frag_b[1]，并且使用 frag_a[0] 中的数据计算 C 的部分结果，也就是上次写入的结果。循环后，会存在最后一次写入的 frag_a 与 b 未使用于计算。
+		  2. 上一步结束后，就可以计算出一个大小为 [THREAD_SIZE_Y, THREAD_SIZE_X] 的矩阵，将结果累加至二维寄存器 accum 中
+	    4. 使用 ldg_a_reg 中的数据对 write_stage_idx 指定的共享内存进行写入，写入后切换 write_stage_idx
+	    5. 将下一次 k-split 的数据中第一次小循环所需的数据读取到 frag_a[0] 和 frag_b[0] 中、
+	    6. 计算本次大循环中最后一次小循环的结果
+      5. 将最后结果写回 C
+ */
+
 
 #include <stdio.h>
 #include <stdlib.h>

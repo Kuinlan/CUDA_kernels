@@ -1,4 +1,4 @@
-// optimize sgemm
+// Reduce bank conflict loading from smem to register based on v4
 
 #include <stdio.h>
 #include <stdlib.h>
